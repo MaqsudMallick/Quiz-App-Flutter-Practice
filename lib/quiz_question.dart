@@ -3,7 +3,8 @@ import 'package:quiz_app/model/dummy_questions.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class QuizQuestion extends StatefulWidget{
-  const QuizQuestion({super.key});
+  const QuizQuestion({super.key, required this.onAnswerSelect});
+  final void Function(String) onAnswerSelect;
   @override
   State<QuizQuestion> createState() {
     return _QuizQuestionState();
@@ -14,7 +15,8 @@ class QuizQuestion extends StatefulWidget{
 class _QuizQuestionState extends State<QuizQuestion>{
   int questionIndex = 0;
 
-  void nextQeuestion(){
+  void nextQeuestion(String ans){
+    widget.onAnswerSelect(ans);
     setState(() {
       if(questions.length!=(questionIndex+1)){
         questionIndex++;
@@ -41,7 +43,7 @@ class _QuizQuestionState extends State<QuizQuestion>{
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 60,),
-          ...currentQuestion.shuffleAnswers().map((e) => AnswerButton(e, nextQeuestion)) 
+          ...currentQuestion.shuffleAnswers().map((e) => AnswerButton(e, () {nextQeuestion(e);})) 
         ],
       )
     );
@@ -64,7 +66,7 @@ class AnswerButton extends StatelessWidget {
           foregroundColor: Colors.white,
           backgroundColor: const Color.fromARGB(255, 22, 196, 48),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20)
+            borderRadius: BorderRadius.circular(10)
           )
         ), 
         child: Text(answerText, textAlign: TextAlign.center,)
